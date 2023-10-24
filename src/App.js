@@ -1,3 +1,4 @@
+import AuctionDetail from "./scenes/auctionDetail/AuctionDetail";
 import AuctionList from "./scenes/auctionList/AuctionList";
 import CreateAuction from "./scenes/createAuction/CreateAuction";
 import SideBar from "./scenes/global/SideBar";
@@ -12,6 +13,7 @@ function App() {
         <TopBar/>
         <Routes>
           <Route path="/" element={<AuctionList/>} />
+          <Route path="/auction/:auctionId" element={<AuctionDetail />}  />
           <Route path="/createAuction" element={<CreateAuction />} />
         </Routes>
       </main>
