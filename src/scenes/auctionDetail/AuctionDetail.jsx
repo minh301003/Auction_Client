@@ -1,10 +1,12 @@
 import { Box, Card, CardContent, CardMedia, Typography, Button, Grid, TextField } from '@mui/material';
 import Header from '../../components/Header';
 import { useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { ToastContainer , toast } from "react-toastify";
+import { UserContext } from "../../context/UserContext";
 
 const AuctionDetail = () => {
-    //get data
+    //fetch data
     const [auctions, setAuctions] = useState([]);
     useEffect(() => {
       (async () => {
@@ -21,8 +23,28 @@ const AuctionDetail = () => {
     const thisAuction = auctions.find((auction) => auction.id === auctionId)
     const {name, description, imageUrl, currentHighestBid, remainingTime} = thisAuction || {};
    
+    const {accountBalance, setAccountBalance} = useContext(UserContext)
+    const [bid, setBid] = useState('');
+    
+    const handlePlaceBid = () => {
+      const newBid = parseFloat(bid);
+      if (!isNaN(newBid)) {
+        if (newBid <= parseFloat(currentHighestBid)) {
+          toast.warning("Số tiền đấu giá phải lớn hơn mức đấu giá hiện tại!")
+        } else if (newBid > parseFloat(accountBalance)) {
+          toast.warning("Số tiền trong tài khoản không đủ, vui lòng nạp thêm!")
+        } else {
+          setAccountBalance(accountBalance - newBid);
+          setBid("");
+          thisAuction.currentHighestBid = newBid;
+          toast.success("Đặt tiền đấu giá thành công!");
+        }
+      }
+      
+    };
     return (
       <Box m="20px">
+        <ToastContainer theme="colored" position="top-center"></ToastContainer>
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Header
             title="Thông tin đấu giá"
@@ -60,7 +82,7 @@ const AuctionDetail = () => {
                   </Grid>
                   <Grid item xs={12} md={12}>
                     <Typography variant="h6" color="text.primary">
-                      Mức giá cao nhất: {currentHighestBid}
+                      Mức giá cao nhất: {currentHighestBid} VND
                     </Typography>
                   </Grid>
                   <Grid item xs={12} md={12}>
@@ -71,12 +93,22 @@ const AuctionDetail = () => {
                       alignItems="center"
                       columnGap={2}
                     >
-                      <TextField label="Nhập mức giá" variant="standard" />
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        size="large"
-                      >
+                      <TextField
+                        autoFocus
+                        margin="dense"
+                        label="Số tiền"
+                        type="number"
+                        InputProps={{
+                          inputProps: {
+                            min: 10000,
+                            max: 10000000,
+                            step: 10000,
+                          },
+                        }}
+                        value={bid}
+                        onChange={(e) => setBid(e.target.value)}
+                      />
+                      <Button variant="contained" color="primary" size="large" onClick={handlePlaceBid}>
                         Đấu giá
                       </Button>
                     </Grid>

@@ -18,7 +18,7 @@ const CustomAuction = ({ id, name, imageUrl, currentHighestBid, remainingTime}) 
               gutterBottom
               variant="h6"
               component="div"
-              color="primary"
+              color="text.primary"
             >
               {name}
             </Typography>
