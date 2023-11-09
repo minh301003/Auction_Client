@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 import { UserProvider } from "./context/UserContext";
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import Register from "./scenes/register/Register";
 
 
 function App({ children }) {
@@ -18,7 +19,7 @@ function App({ children }) {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.pathname === '/login') {
+    if (location.pathname === '/login' || location.pathname === '/register') {
       setDisplay(false);
     } else {
       setDisplay(true);
@@ -38,6 +39,7 @@ function App({ children }) {
             <Route path="/auction/:auctionId" element={<AuctionDetail />}  />
             <Route path="/createAuction" element={<CreateAuction />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
           </Routes>
         </main>
       </div>
